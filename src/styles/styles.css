@@ -1,0 +1,46 @@
+.garage {
+  width: 100vw;
+  height: 100vh;
+}
+
+.garage__header {
+  max-width: 900px;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+  font-size: calc(10px + 2vmin);
+}
+
+.garage__header h2 {
+  color: transparent;
+  background: linear-gradient(135deg, #42d392, #647eff);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.container {
+  max-width: 1300px;
+  margin-inline: auto;
+  margin-top: 1.5rem;
+}
+
+.garage__body-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.garage__body hr {
+  border: none;
+  border-top: 2px solid black;
+  margin-top: 5px;
+}
+
+.car__component hr {
+  border-top: 1px solid gray;
+}
+
+.car-icon {
+  display: block;
+}

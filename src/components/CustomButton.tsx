@@ -6,9 +6,10 @@ interface Props {
   text: string;
   icon?: string;
   btnType?: string;
+  btnSubmitType?: string;
 }
 
-const CustomButton: React.FC<Props> = ({ color, text, icon, btnType }) => {
+const CustomButton: React.FC<Props> = ({ color, text, icon, btnType, btnSubmitType }) => {
   let buttonIcon;
 
   switch (icon) {
@@ -38,7 +39,13 @@ const CustomButton: React.FC<Props> = ({ color, text, icon, btnType }) => {
           },
         }}
       >
-        <Button type={btnType ? "primary" : "default"} icon={buttonIcon} iconPosition="end" block>
+        <Button
+          type={btnType ? "primary" : "default"}
+          icon={buttonIcon}
+          iconPosition='end'
+          block
+          htmlType={btnSubmitType ? "submit" : "button"}
+        >
           {text}
         </Button>
       </ConfigProvider>

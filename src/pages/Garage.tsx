@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import "../styles/styles.css";
 import {
   ConfigProviderProps,
@@ -7,17 +7,24 @@ import {
   Space,
   Input,
   ColorPicker,
+  Form,
 } from "antd";
 import CustomButton from "../components/CustomButton";
 import Car from "../components/Car";
 import { CarTypes } from "../types/types";
 import { getCars } from "../api/getCars";
+import { createCar } from "../api/createCar";
+import type { ColorPickerProps, GetProp } from "antd";
 
+type Color = GetProp<ColorPickerProps, "value">;
+type Format = GetProp<ColorPickerProps, "format">;
 type SizeType = ConfigProviderProps["componentSize"];
 
 const Garage: React.FC = () => {
   const [size, setSize] = useState<SizeType>("large");
   const [cars, setCars] = useState<CarTypes[]>([]);
+  const [color, setColor] = useState<Color>("#42d392");
+  const [formatHex, setFormatHex] = useState<Format | undefined>("hex");
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -31,6 +38,20 @@ const Garage: React.FC = () => {
 
     fetchCars();
   }, []);
+
+  const onCreateCar = async (values: { name: string; color: string }) => {
+    try {
+      const newCar = await createCar({...values, color: hexString});
+      setCars([...cars, newCar]);
+    } catch (error) {
+      console.error("Error creating car:", error);
+    }
+  };
+
+  const hexString = useMemo<string>(
+    () => (typeof color === "string" ? color : color?.toHexString()),
+    [color]
+  );
 
   return (
     <div className='garage'>
@@ -62,10 +83,35 @@ const Garage: React.FC = () => {
             />
           </Space>
 
-          <Space>
+          {/* <Space>
             <Input placeholder='TYPE CAR BRAND' variant='filled' />
             <ColorPicker defaultValue='#388C5C' />
             <CustomButton color='#6921C2' text='CREATE' btnType='primary' />
+          </Space> */}
+
+          <Space>
+            <Form onFinish={onCreateCar} layout='inline'>
+              <Form.Item name='name'>
+                <Input placeholder='TYPE CAR BRAND' variant='filled' />
+              </Form.Item>
+              <Form.Item name='color'>
+                <ColorPicker
+                  defaultValue="#1390F0"
+                  format={formatHex}
+                  value={color}
+                  onChange={setColor}
+                  onFormatChange={setFormatHex}
+                />
+              </Form.Item>
+              <Space>
+                <CustomButton
+                  color='#6921C2'
+                  text='CREATE'
+                  btnType='primary'
+                  btnSubmitType='submit'
+                />
+              </Space>
+            </Form>
           </Space>
 
           <Space>

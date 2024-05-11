@@ -38,7 +38,7 @@ const CustomButton: React.FC<Props> = ({ color, text, icon, btnType }) => {
           },
         }}
       >
-        <Button type={btnType ? "primary" : "default"} icon={buttonIcon} block>
+        <Button type={btnType ? "primary" : "default"} icon={buttonIcon} iconPosition="end" block>
           {text}
         </Button>
       </ConfigProvider>

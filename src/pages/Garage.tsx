@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "../styles/styles.css";
 import {
   ConfigProviderProps,
@@ -10,11 +10,28 @@ import {
 } from "antd";
 import CustomButton from "../components/CustomButton";
 import Car from "../components/Car";
+import { CarTypes } from "../types/types";
+import { getCars } from "../api/getCars";
 
 type SizeType = ConfigProviderProps["componentSize"];
 
 const Garage: React.FC = () => {
   const [size, setSize] = useState<SizeType>("large");
+  const [cars, setCars] = useState<CarTypes[]>([]);
+
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const fetchedCars = await getCars();
+        setCars(fetchedCars);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      }
+    };
+
+    fetchCars();
+  }, []);
+
   return (
     <div className='garage'>
       <div className='garage__header'>
@@ -67,8 +84,9 @@ const Garage: React.FC = () => {
         </div>
         <div className='garage__body'>
           <hr />
-          <Car />
-          <Car />
+          {cars.map((car) => (
+            <Car key={car.id} {...car} />
+          ))}
         </div>
       </div>
     </div>

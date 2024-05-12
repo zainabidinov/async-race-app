@@ -1,15 +1,14 @@
 import { Button, ConfigProvider } from "antd";
 import { PlayCircleTwoTone, UndoOutlined } from "@ant-design/icons";
+import { ButtonTypes } from "../types/types";
 
-interface Props {
-  color: string;
-  text: string;
-  icon?: string;
-  btnType?: string;
-  btnSubmitType?: string;
+interface customButtonTypes extends ButtonTypes {
+  onDelete?: () => void;
+  onUpdate?: () => void;
 }
 
-const CustomButton: React.FC<Props> = ({ color, text, icon, btnType, btnSubmitType }) => {
+const CustomButton: React.FC<customButtonTypes> = ({ color, text, icon, btnType, btnSubmitType, onDelete,
+  onUpdate }) => {
   let buttonIcon;
 
   switch (icon) {
@@ -45,6 +44,7 @@ const CustomButton: React.FC<Props> = ({ color, text, icon, btnType, btnSubmitTy
           iconPosition='end'
           block
           htmlType={btnSubmitType ? "submit" : "button"}
+          onClick={onDelete ? onDelete : onUpdate}
         >
           {text}
         </Button>

@@ -4,13 +4,18 @@ import { IconContext } from "react-icons";
 import { GiRaceCar } from "react-icons/gi";
 import { CarTypes } from "../types/types";
 
-const Car: React.FC<CarTypes> = ({name, color, id}) => {
+interface CarProps extends CarTypes {
+  onDelete: () => void;
+  onUpdate: () => void;
+}
+
+const Car: React.FC<CarProps> = ({ name, color, id, onDelete, onUpdate }) => {
   return (
     <div className='car__component'>
       <Space>
         <Space direction='vertical'>
-          <CustomButton color='#3BAEFE' text='SELECT' />
-          <CustomButton color='#E22732' text='REMOVE' />
+          <CustomButton color='#3BAEFE' text='SELECT' onUpdate={onUpdate}/>
+          <CustomButton color='#E22732' text='REMOVE' onDelete={onDelete}/>
         </Space>
 
         <Space direction='vertical'>
@@ -22,6 +27,7 @@ const Car: React.FC<CarTypes> = ({name, color, id}) => {
         >
           <GiRaceCar />
         </IconContext.Provider>
+        <span className='car__name' style={{color: "#929F99"}}>{name}</span>
       </Space>
       <hr />
     </div>

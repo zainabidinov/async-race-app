@@ -17,6 +17,9 @@ import { createCar } from "../api/createCar";
 import type { ColorPickerProps, GetProp } from "antd";
 import { deleteCar } from "../api/deleteCar";
 import { updateCar } from "../api/updateCar";
+import { switchCarStatus } from "../api/switchCarStatus";
+import { useNavigate } from "react-router-dom";
+import { switchDriveMode } from "../api/switchDriveMode";
 
 type Color = GetProp<ColorPickerProps, "value">;
 type Format = GetProp<ColorPickerProps, "format">;
@@ -29,6 +32,8 @@ const Garage: React.FC = () => {
   const [formatHex, setFormatHex] = useState<Format | undefined>("hex");
   const [carId, setCarId] = useState<number>(0);
   const [carName, setCarName] = useState<string>("");
+  const [carStatus, setCarStatus] = useState<string>("stopped");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -96,16 +101,55 @@ const Garage: React.FC = () => {
     }
   };
 
-  console.log(carName);
+  const onSwitchCarStatus = (carId: number, status: string) => {
+    switchCarStatus({ id: carId, status: "started" })
+      .then((startedCarData) => {
+        if (startedCarData.distance === 500000) {
+          return switchDriveMode({ id: carId, status: "drive" });
+        } else {
+          return Promise.reject(
+            "Error updating car status: Unexpected response from switchCarStatus"
+          );
+        }
+      })
+      .then((driveModeResponse) => {
+        const carIndex = cars.findIndex((car) => car.id === carId);
+        const driveStatus = driveModeResponse.success ? "true" : "false";
+        const updatedCarWithDriveStatus = {
+          ...driveModeResponse,
+          id: cars[carIndex].id,
+          name: cars[carIndex].name,
+          color: cars[carIndex].color,
+          drive: driveStatus,
+        };
+
+        setCars(
+          cars.map((car, index) =>
+            index === carIndex ? updatedCarWithDriveStatus : car
+          )
+        );
+      })
+      .catch((error) => {
+        console.error("Error updating car:", error);
+      });
+  };
 
   return (
     <div className='garage'>
       <div className='garage__header'>
         <Flex gap='middle'>
-          <Button type='primary' size={size}>
+          <Button
+            type='primary'
+            size={size}
+            onClick={() => navigate("/garage")}
+          >
             GARAGE
           </Button>
-          <Button type='primary' size={size}>
+          <Button
+            type='primary'
+            size={size}
+            onClick={() => navigate("/winners")}
+          >
             WINNERS
           </Button>
         </Flex>
@@ -204,6 +248,8 @@ const Garage: React.FC = () => {
               {...car}
               onDelete={() => onDeleteCar(car.id)}
               onUpdate={() => setCarId(car.id)}
+              onSwitchCarStatus={() => onSwitchCarStatus(car.id, carStatus)}
+              carStatus={carStatus}
             />
           ))}
         </div>

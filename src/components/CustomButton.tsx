@@ -5,10 +5,21 @@ import { ButtonTypes } from "../types/types";
 interface customButtonTypes extends ButtonTypes {
   onDelete?: () => void;
   onUpdate?: () => void;
+  onSwitchCarStatus?: () => void;
+  carStatus?: boolean | undefined;
 }
 
-const CustomButton: React.FC<customButtonTypes> = ({ color, text, icon, btnType, btnSubmitType, onDelete,
-  onUpdate }) => {
+const CustomButton: React.FC<customButtonTypes> = ({
+  color,
+  text,
+  icon,
+  btnType,
+  btnSubmitType,
+  onDelete,
+  onUpdate,
+  onSwitchCarStatus,
+  carStatus,
+}) => {
   let buttonIcon;
 
   switch (icon) {
@@ -22,6 +33,16 @@ const CustomButton: React.FC<customButtonTypes> = ({ color, text, icon, btnType,
       buttonIcon = null;
       break;
   }
+
+  const handleClick = () => {
+    if (onDelete) {
+      onDelete();
+    } else if (onUpdate) {
+      onUpdate();
+    } else if (onSwitchCarStatus) {
+      onSwitchCarStatus();
+    }
+  };
 
   return (
     <>
@@ -44,7 +65,8 @@ const CustomButton: React.FC<customButtonTypes> = ({ color, text, icon, btnType,
           iconPosition='end'
           block
           htmlType={btnSubmitType ? "submit" : "button"}
-          onClick={onDelete ? onDelete : onUpdate}
+          onClick={handleClick}
+          disabled={carStatus}
         >
           {text}
         </Button>

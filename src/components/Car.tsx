@@ -1,17 +1,47 @@
-import { Space } from "antd";
+import { Space, Button } from "antd";
 import CustomButton from "./CustomButton";
 import { IconContext } from "react-icons";
 import { GiRaceCar } from "react-icons/gi";
 import { CarTypes } from "../types/types";
+import { useState } from "react";
+import { useCarContext } from "../store/CarContext";
 
 interface CarProps extends CarTypes {
   onDelete: () => void;
   onUpdate: () => void;
-  onSwitchCarStatus: () => void;
-  carStatus: string;
+  onStart: () => void;
+  onStop: () => void;
+  carPosition: number;
+  // onSwitchCarStatus: (
+  //   carId: number,
+  //   status: string,
+  //   carRef: HTMLDivElement | null
+  // ) => Promise<void>;
 }
 
-const Car: React.FC<CarProps> = ({ name, color, id, onDelete, onUpdate, onSwitchCarStatus, carStatus }) => {
+const Car: React.FC<CarProps> = ({
+  name,
+  color,
+  id,
+  onDelete,
+  onUpdate,
+  onStart,
+  onStop,
+  carPosition,
+  // onSwitchCarStatus,
+}) => {
+  const [carStatus, setCarStatus] = useState<string>("stopped");
+
+  const handleStartClick = () => {
+    setCarStatus("started");
+    onStart();
+  };
+
+  const handleStopClick = () => {
+    setCarStatus("stopped");
+    onStop();
+  };
+
   return (
     <div className='car__component'>
       <Space>
@@ -21,15 +51,32 @@ const Car: React.FC<CarProps> = ({ name, color, id, onDelete, onUpdate, onSwitch
         </Space>
 
         <Space direction='vertical'>
-          <CustomButton color='#F7F420' text='A' onSwitchCarStatus={onSwitchCarStatus} carStatus={(carStatus === "started") ? true : false}/>
-          <CustomButton color='#42d392' text='B' onSwitchCarStatus={onSwitchCarStatus} carStatus={(carStatus === "stopped") ? true : false}/>
+          <Button
+            color='#F7F420'
+            onClick={handleStartClick}
+            disabled={carStatus === "started"}
+          >
+            A
+          </Button>
+          <Button
+            color='#42d392'
+            onClick={handleStopClick}
+            disabled={carStatus === "stopped"}
+          >
+            B
+          </Button>
         </Space>
-        <IconContext.Provider
-          value={{ color: color, className: "car-icon", size: "6em" }}
-        >
-          <GiRaceCar />
+        <IconContext.Provider value={{ color: color, size: "6em" }}>
+          <div
+            className={`car-icon-${id}`}
+            style={{ transform: `translateX(${carPosition}px)` }}
+          >
+            <GiRaceCar />
+          </div>
         </IconContext.Provider>
-        <span className='car__name' style={{color: "#929F99"}}>{name}</span>
+        <span className='car__name' style={{ color: "#929F99" }}>
+          {name}
+        </span>
       </Space>
       <hr />
     </div>

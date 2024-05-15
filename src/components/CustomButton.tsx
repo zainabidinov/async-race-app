@@ -4,9 +4,10 @@ import { ButtonTypes } from "../types/types";
 
 interface customButtonTypes extends ButtonTypes {
   onDelete?: () => void;
+  carStatus?: string;
   onUpdate?: () => void;
   onSwitchCarStatus?: () => void;
-  carStatus?: boolean | undefined;
+  isDisabled?: boolean;
 }
 
 const CustomButton: React.FC<customButtonTypes> = ({
@@ -18,7 +19,8 @@ const CustomButton: React.FC<customButtonTypes> = ({
   onDelete,
   onUpdate,
   onSwitchCarStatus,
-  carStatus,
+  isDisabled,
+  carStatus
 }) => {
   let buttonIcon;
 
@@ -66,7 +68,7 @@ const CustomButton: React.FC<customButtonTypes> = ({
           block
           htmlType={btnSubmitType ? "submit" : "button"}
           onClick={handleClick}
-          disabled={carStatus}
+          disabled={isDisabled}
         >
           {text}
         </Button>

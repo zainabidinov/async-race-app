@@ -37,6 +37,10 @@
   margin-top: 5px;
 }
 
+.car__component {
+  position: relative;
+}
+
 .car__component hr {
   border-top: 1px solid gray;
 }
@@ -44,3 +48,7 @@
 .car-icon {
   display: block;
 }
+
+
+
+

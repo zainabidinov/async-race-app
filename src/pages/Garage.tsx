@@ -12,27 +12,40 @@ import {
 import CustomButton from "../components/CustomButton";
 import Car from "../components/Car";
 import { CarTypes } from "../types/types";
-import { getCars } from "../api/getCars";
-import { createCar } from "../api/createCar";
 import type { ColorPickerProps, GetProp } from "antd";
-import { deleteCar } from "../api/deleteCar";
-import { updateCar } from "../api/updateCar";
-import { switchCarStatus } from "../api/switchCarStatus";
 import { useNavigate } from "react-router-dom";
-import { switchDriveMode } from "../api/switchDriveMode";
+import { useCarContext } from "../store/CarContext";
+import { motion } from "framer-motion";
 
 type Color = GetProp<ColorPickerProps, "value">;
 type Format = GetProp<ColorPickerProps, "format">;
 type SizeType = ConfigProviderProps["componentSize"];
 
 const Garage: React.FC = () => {
+  const {
+    cars,
+    carVelocity,
+    carDistance,
+    carPosition,
+    setCarPosition,
+    setCarVelocity,
+    setCarDistance,
+    setCars,
+    getCars,
+    createCar,
+    deleteCar,
+    updateCar,
+    switchCarStatus,
+    switchDriveMode,
+  } = useCarContext();
+
   const [size, setSize] = useState<SizeType>("large");
-  const [cars, setCars] = useState<CarTypes[]>([]);
   const [color, setColor] = useState<Color>("#42d392");
   const [formatHex, setFormatHex] = useState<Format | undefined>("hex");
   const [carId, setCarId] = useState<number>(0);
   const [carName, setCarName] = useState<string>("");
-  const [carStatus, setCarStatus] = useState<string>("stopped");
+  const AnimatedCar = motion.div;
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,15 +79,6 @@ const Garage: React.FC = () => {
     [color]
   );
 
-  const onDeleteCar = async (carId: number) => {
-    try {
-      await deleteCar(carId);
-      setCars(cars.filter((car) => car.id !== carId));
-    } catch (error) {
-      console.error("Error deleting car:", error);
-    }
-  };
-
   const onUpdateCar = async (values: {
     name: string;
     color: string;
@@ -101,37 +105,59 @@ const Garage: React.FC = () => {
     }
   };
 
-  const onSwitchCarStatus = (carId: number, status: string) => {
-    switchCarStatus({ id: carId, status: "started" })
-      .then((startedCarData) => {
-        if (startedCarData.distance === 500000) {
-          return switchDriveMode({ id: carId, status: "drive" });
-        } else {
-          return Promise.reject(
-            "Error updating car status: Unexpected response from switchCarStatus"
-          );
-        }
-      })
-      .then((driveModeResponse) => {
-        const carIndex = cars.findIndex((car) => car.id === carId);
-        const driveStatus = driveModeResponse.success ? "true" : "false";
-        const updatedCarWithDriveStatus = {
-          ...driveModeResponse,
-          id: cars[carIndex].id,
-          name: cars[carIndex].name,
-          color: cars[carIndex].color,
-          drive: driveStatus,
-        };
+  const onDeleteCar = async (carId: number) => {
+    try {
+      await deleteCar(carId);
+      setCars(cars.filter((car) => car.id !== carId));
+    } catch (error) {
+      console.error("Error deleting car:", error);
+    }
+  };
 
-        setCars(
-          cars.map((car, index) =>
-            index === carIndex ? updatedCarWithDriveStatus : car
-          )
-        );
-      })
-      .catch((error) => {
-        console.error("Error updating car:", error);
+
+  
+
+  const onStartCar = async (carId: number) => {
+    try {
+      const updatedCarData = await switchCarStatus({
+        id: carId,
+        status: "started",
       });
+      const { velocity, distance, id } = updatedCarData;
+
+      // make car moving by received velocity
+
+      // const carWithNewDriveStatus = await switchCarStatus({
+      //   id: carId,
+      //   status: "drive",
+      // });
+      // stop the car if success is not equal to true at the place where car was last position during its move
+
+      const carIndex = cars.findIndex((car) => car.id === carId);
+      const updatedCarWithDriveStatus = {
+        id: cars[carIndex].id,
+        name: cars[carIndex].name,
+        color: cars[carIndex].color,
+        velocity: velocity,
+        distance: distance,
+      };
+
+      setCars(
+        cars.map((car, index) =>
+          index === carIndex ? updatedCarWithDriveStatus : car
+        )
+      );
+    } catch (error) {
+      console.error("Error starting car:", error);
+    }
+  };
+
+  const onStopCar = async (carId: number) => {
+    try {
+      await switchCarStatus({ id: carId, status: "stopped" });
+    } catch (error) {
+      console.error("Error stopping car:", error);
+    }
   };
 
   return (
@@ -248,8 +274,10 @@ const Garage: React.FC = () => {
               {...car}
               onDelete={() => onDeleteCar(car.id)}
               onUpdate={() => setCarId(car.id)}
-              onSwitchCarStatus={() => onSwitchCarStatus(car.id, carStatus)}
-              carStatus={carStatus}
+              onStart={() => onStartCar(car.id)} 
+              onStop={() => onStopCar(car.id)}
+              carPosition={carPosition}
+              // onSwitchCarStatus={onSwitchCarStatus}
             />
           ))}
         </div>

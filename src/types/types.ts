@@ -3,8 +3,8 @@ export interface CarTypes {
     color: string;
     id: number;
     status?: string;
-    velocity?: number;
-    distance?: number;
+    velocity: number;
+    distance: number;
     success?: boolean | string;
 }
 

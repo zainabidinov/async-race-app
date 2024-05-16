@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { useCarContext } from "../store/CarContext";
 import anime from "animejs";
 import { genRandomColor, genRandomCar } from "../utils/genRandomCars";
+import { CarTypes } from "../types/types";
 
 type Color = GetProp<ColorPickerProps, "value">;
 type Format = GetProp<ColorPickerProps, "format">;
@@ -40,15 +41,30 @@ const Garage: React.FC = () => {
   const [formatHex, setFormatHex] = useState<Format | undefined>("hex");
   const [carId, setCarId] = useState<number>(0);
   const [carName, setCarName] = useState<string>("");
+  const navigate = useNavigate();
   let animation = anime({});
 
-  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPageElements, setCurrentPageElements] = useState<CarTypes[]>(
+    []
+  );
+  const [totalElementsCount, setTotalElementsCount] = useState(0);
+
+  const handlePageClick = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    const newOffset = (pageNumber - 1) * 7;
+    const currentPageCars = cars.slice(newOffset, newOffset + 7);
+    setCurrentPageElements(currentPageCars);
+  };
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const fetchedCars = await getCars();
         setCars(fetchedCars);
+        setTotalElementsCount(fetchedCars.length);
+        const currentPageCars = fetchedCars.slice(0, 7);
+        setCurrentPageElements(currentPageCars);
       } catch (error) {
         console.error("Error fetching cars:", error);
       }
@@ -65,6 +81,7 @@ const Garage: React.FC = () => {
     try {
       const newCar = await createCar({ ...values, color: hexString });
       setCars([...cars, newCar]);
+      setTotalElementsCount(cars.length);
     } catch (error) {
       console.error("Error creating car:", error);
     }
@@ -95,6 +112,8 @@ const Garage: React.FC = () => {
         });
         setCarId(0);
         setCars(cars.map((car) => (car.id === carId ? updatedCar : car)));
+        setCurrentPageElements(cars);
+        setTotalElementsCount(cars.length);
       } catch (error) {
         console.error("Error updating car:", error);
       }
@@ -105,6 +124,7 @@ const Garage: React.FC = () => {
     try {
       await deleteCar(carId);
       setCars(cars.filter((car) => car.id !== carId));
+      setTotalElementsCount(cars.length);
     } catch (error) {
       console.error("Error deleting car:", error);
     }
@@ -300,7 +320,7 @@ const Garage: React.FC = () => {
         </div>
         <div className='garage__body'>
           <hr />
-          {cars.map((car) => (
+          {currentPageElements.map((car) => (
             <Car
               key={car.id}
               {...car}
@@ -310,7 +330,17 @@ const Garage: React.FC = () => {
               onStop={onStopCar}
             />
           ))}
-          <Pagination />
+          <Pagination
+            current={currentPage}
+            pageSize={7}
+            total={totalElementsCount}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} cars`
+            }
+            onChange={handlePageClick}
+            showSizeChanger={false}
+            simple
+          />
         </div>
       </div>
     </div>

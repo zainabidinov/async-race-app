@@ -37,6 +37,11 @@
   margin-top: 5px;
 }
 
+.winners {
+  width: 100vw;
+  height: 100vh;
+}
+
 .car__component {
   position: relative;
 }
@@ -48,7 +53,3 @@
 .car-icon {
   display: block;
 }
-
-
-
-

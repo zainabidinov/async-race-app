@@ -32,7 +32,7 @@ type CarContextType = {
   switchDriveMode: (carData: {
     id: number;
     status: string;
-  }) => Promise<CarTypes>;
+  }) => Promise<boolean>;
   setCars: React.Dispatch<React.SetStateAction<CarTypes[]>>;
   setCarVelocity: React.Dispatch<React.SetStateAction<number>>;
   setCarDistance: React.Dispatch<React.SetStateAction<number>>;
@@ -124,6 +124,22 @@ export const CarProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  const switchCarEngineStatus = async (carData: {
+    id: number;
+    status: string;
+  }): Promise<boolean> => {
+    try {
+      const updatedCarData = await switchDriveMode({
+        id: carData.id,
+        status: carData.status,
+      });
+      return updatedCarData;
+    } catch (error) {
+      console.error("Error switching car status:", error);
+      throw error;
+    }
+  };
+
   const value: CarContextType = {
     cars,
     color,
@@ -137,7 +153,7 @@ export const CarProvider: React.FC<{ children: React.ReactNode }> = ({
     deleteCar: removeCar,
     updateCar: updateExistingCar,
     switchCarStatus: switchCarDriveStatus,
-    switchDriveMode: switchCarDriveStatus,
+    switchDriveMode: switchCarEngineStatus,
     setCars: setCars,
     getCars: getCars,
     setCarDistance,

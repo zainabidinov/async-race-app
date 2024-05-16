@@ -3,20 +3,24 @@ import CustomButton from "./CustomButton";
 import { IconContext } from "react-icons";
 import { GiRaceCar } from "react-icons/gi";
 import { CarTypes } from "../types/types";
-import { useState } from "react";
+import { useRef } from "react";
 import { useCarContext } from "../store/CarContext";
 
 interface CarProps extends CarTypes {
   onDelete: () => void;
   onUpdate: () => void;
-  onStart: () => void;
-  onStop: () => void;
-  carPosition: number;
-  // onSwitchCarStatus: (
-  //   carId: number,
-  //   status: string,
-  //   carRef: HTMLDivElement | null
-  // ) => Promise<void>;
+  onStart: (
+    carId: number,
+    carStatus: string,
+    carRef: HTMLDivElement | null,
+    carWrapperRef: HTMLDivElement | null
+  ) => void;
+  onStop: (
+    carId: number,
+    carStatus: string,
+    carRef: HTMLDivElement | null,
+    carWrapperRef: HTMLDivElement | null
+  ) => void;
 }
 
 const Car: React.FC<CarProps> = ({
@@ -27,23 +31,13 @@ const Car: React.FC<CarProps> = ({
   onUpdate,
   onStart,
   onStop,
-  carPosition,
-  // onSwitchCarStatus,
 }) => {
-  const [carStatus, setCarStatus] = useState<string>("stopped");
-
-  const handleStartClick = () => {
-    setCarStatus("started");
-    onStart();
-  };
-
-  const handleStopClick = () => {
-    setCarStatus("stopped");
-    onStop();
-  };
+  const { switchCarStatus } = useCarContext();
+  const carRef = useRef<HTMLDivElement | null>(null);
+  const carWrapperRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className='car__component'>
+    <div className='car__component' ref={carWrapperRef}>
       <Space>
         <Space direction='vertical'>
           <CustomButton color='#3BAEFE' text='SELECT' onUpdate={onUpdate} />
@@ -53,24 +47,23 @@ const Car: React.FC<CarProps> = ({
         <Space direction='vertical'>
           <Button
             color='#F7F420'
-            onClick={handleStartClick}
-            disabled={carStatus === "started"}
+            onClick={() =>
+              onStart(id, "started", carRef.current, carWrapperRef.current)
+            }
           >
             A
           </Button>
           <Button
             color='#42d392'
-            onClick={handleStopClick}
-            disabled={carStatus === "stopped"}
+            onClick={() =>
+              onStop(id, "started", carRef.current, carWrapperRef.current)
+            }
           >
             B
           </Button>
         </Space>
         <IconContext.Provider value={{ color: color, size: "6em" }}>
-          <div
-            className={`car-icon-${id}`}
-            style={{ transform: `translateX(${carPosition}px)` }}
-          >
+          <div ref={carRef} className={`car-icon-${id}`}>
             <GiRaceCar />
           </div>
         </IconContext.Provider>

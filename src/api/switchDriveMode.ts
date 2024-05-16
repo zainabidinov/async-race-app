@@ -1,7 +1,7 @@
 import BASE_URL from "./baseURL";
 import { CarTypes } from "../types/types";
 
-export const switchDriveMode = async (carData: { id: number, status: string }): Promise<CarTypes> => {
+export const switchDriveMode = async (carData: { id: number, status: string }): Promise<boolean> => {
     try {
         const { id, status } = carData;
         const response = await fetch(`${BASE_URL}/engine?id=${id}&status=${status}`, {
@@ -11,10 +11,12 @@ export const switchDriveMode = async (carData: { id: number, status: string }): 
             },
             body: JSON.stringify({ id, status })
         })
+        if (response.ok) {
+            return false;
+        } else {
+            return true
+        }
 
-        const updatedCarData = await response.json();
-        const updatedCar: CarTypes = { ...updatedCarData, id };
-        return updatedCar;
     } catch (error) {
         console.error('Error updating car:', error);
         throw error;

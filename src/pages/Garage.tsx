@@ -1,4 +1,5 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
+import React from "react";
 import "../styles/styles.css";
 import {
   ConfigProviderProps,
@@ -8,6 +9,7 @@ import {
   Input,
   ColorPicker,
   Form,
+  Pagination
 } from "antd";
 import CustomButton from "../components/CustomButton";
 import Car from "../components/Car";
@@ -15,7 +17,7 @@ import { CarTypes } from "../types/types";
 import type { ColorPickerProps, GetProp } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCarContext } from "../store/CarContext";
-import { motion } from "framer-motion";
+import anime from "animejs";
 
 type Color = GetProp<ColorPickerProps, "value">;
 type Format = GetProp<ColorPickerProps, "format">;
@@ -44,7 +46,7 @@ const Garage: React.FC = () => {
   const [formatHex, setFormatHex] = useState<Format | undefined>("hex");
   const [carId, setCarId] = useState<number>(0);
   const [carName, setCarName] = useState<string>("");
-  const AnimatedCar = motion.div;
+  let animation = anime({});
 
   const navigate = useNavigate();
 
@@ -114,47 +116,64 @@ const Garage: React.FC = () => {
     }
   };
 
-
-  
-
-  const onStartCar = async (carId: number) => {
+  const onStartCar = async (
+    carId: number,
+    carStatus: string,
+    carRef: HTMLDivElement | null,
+    carWrapperRef: HTMLDivElement | null
+  ) => {
     try {
       const updatedCarData = await switchCarStatus({
         id: carId,
-        status: "started",
+        status: carStatus,
       });
       const { velocity, distance, id } = updatedCarData;
 
-      // make car moving by received velocity
+      const startingPosition = carRef?.getBoundingClientRect().left || 0;
+      const containerWidth = carWrapperRef?.getBoundingClientRect().right || 0;
+      const availableSpace = containerWidth - startingPosition;
+      const animationDuration = distance / velocity;
+      console.log(animationDuration);
 
-      // const carWithNewDriveStatus = await switchCarStatus({
-      //   id: carId,
-      //   status: "drive",
-      // });
-      // stop the car if success is not equal to true at the place where car was last position during its move
+      const carIconWidth = carRef?.clientWidth || 0;
+      const maxDistance = availableSpace - carIconWidth;
+      animation = anime({
+        targets: carRef,
+        translateX: [0, maxDistance],
+        direction: "normal",
+        duration: animationDuration,
+        easing: "linear",
+        autoplay: false,
+        complete: () => {
+          anime.set(carRef, { translateX: maxDistance });
+        },
+      });
 
-      const carIndex = cars.findIndex((car) => car.id === carId);
-      const updatedCarWithDriveStatus = {
-        id: cars[carIndex].id,
-        name: cars[carIndex].name,
-        color: cars[carIndex].color,
-        velocity: velocity,
-        distance: distance,
-      };
+      animation.play();
 
-      setCars(
-        cars.map((car, index) =>
-          index === carIndex ? updatedCarWithDriveStatus : car
-        )
-      );
+      const isEngineBroken = await switchDriveMode({
+        id: carId,
+        status: "drive",
+      });
+
+      if (isEngineBroken) {
+        animation.pause();
+      }
     } catch (error) {
       console.error("Error starting car:", error);
     }
   };
 
-  const onStopCar = async (carId: number) => {
+  const onStopCar = async (
+    carId: number,
+    carStatus: string,
+    carRef: HTMLDivElement | null,
+    carWrapperRef: HTMLDivElement | null
+  ) => {
     try {
-      await switchCarStatus({ id: carId, status: "stopped" });
+      await switchCarStatus({ id: carId, status: carStatus });
+      animation.restart();
+      animation.pause();
     } catch (error) {
       console.error("Error stopping car:", error);
     }
@@ -274,12 +293,11 @@ const Garage: React.FC = () => {
               {...car}
               onDelete={() => onDeleteCar(car.id)}
               onUpdate={() => setCarId(car.id)}
-              onStart={() => onStartCar(car.id)} 
-              onStop={() => onStopCar(car.id)}
-              carPosition={carPosition}
-              // onSwitchCarStatus={onSwitchCarStatus}
+              onStart={onStartCar}
+              onStop={onStopCar}
             />
           ))}
+          <Pagination />
         </div>
       </div>
     </div>

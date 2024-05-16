@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import React from "react";
 import "../styles/styles.css";
 import {
@@ -9,15 +9,15 @@ import {
   Input,
   ColorPicker,
   Form,
-  Pagination
+  Pagination,
 } from "antd";
 import CustomButton from "../components/CustomButton";
 import Car from "../components/Car";
-import { CarTypes } from "../types/types";
 import type { ColorPickerProps, GetProp } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCarContext } from "../store/CarContext";
 import anime from "animejs";
+import { genRandomColor, genRandomCar } from "../utils/genRandomCars";
 
 type Color = GetProp<ColorPickerProps, "value">;
 type Format = GetProp<ColorPickerProps, "format">;
@@ -26,12 +26,6 @@ type SizeType = ConfigProviderProps["componentSize"];
 const Garage: React.FC = () => {
   const {
     cars,
-    carVelocity,
-    carDistance,
-    carPosition,
-    setCarPosition,
-    setCarVelocity,
-    setCarDistance,
     setCars,
     getCars,
     createCar,
@@ -127,7 +121,7 @@ const Garage: React.FC = () => {
         id: carId,
         status: carStatus,
       });
-      const { velocity, distance, id } = updatedCarData;
+      const { velocity, distance } = updatedCarData;
 
       const startingPosition = carRef?.getBoundingClientRect().left || 0;
       const containerWidth = carWrapperRef?.getBoundingClientRect().right || 0;
@@ -176,6 +170,24 @@ const Garage: React.FC = () => {
       animation.pause();
     } catch (error) {
       console.error("Error stopping car:", error);
+    }
+  };
+
+  const generateCars = async () => {
+    try {
+      const generatedCars = await Promise.all(
+        Array.from({ length: 100 }, async () => {
+          const randomModel = genRandomCar();
+          const newCar = await createCar({
+            name: randomModel,
+            color: genRandomColor(),
+          });
+          return newCar;
+        })
+      );
+      setCars([...cars, ...generatedCars]);
+    } catch (error) {
+      console.error("Error generating cars:", error);
     }
   };
 
@@ -282,6 +294,7 @@ const Garage: React.FC = () => {
               color='#42d392'
               text='GENERATE CARS'
               btnType='primary'
+              onGenerateCars={generateCars}
             />
           </Space>
         </div>

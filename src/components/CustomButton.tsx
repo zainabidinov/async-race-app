@@ -7,6 +7,7 @@ interface customButtonTypes extends ButtonTypes {
   carStatus?: string;
   onUpdate?: () => void;
   onSwitchCarStatus?: () => void;
+  onGenerateCars?: () => void;
   isDisabled?: boolean;
 }
 
@@ -19,8 +20,9 @@ const CustomButton: React.FC<customButtonTypes> = ({
   onDelete,
   onUpdate,
   onSwitchCarStatus,
+  onGenerateCars,
   isDisabled,
-  carStatus
+  carStatus,
 }) => {
   let buttonIcon;
 
@@ -43,6 +45,8 @@ const CustomButton: React.FC<customButtonTypes> = ({
       onUpdate();
     } else if (onSwitchCarStatus) {
       onSwitchCarStatus();
+    } else if (onGenerateCars) {
+      onGenerateCars();
     }
   };
 

@@ -1,5 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
-import React from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import "../styles/styles.css";
 import {
   ConfigProviderProps,
@@ -32,8 +31,8 @@ const Garage: React.FC = () => {
     createCar,
     deleteCar,
     updateCar,
-    switchCarStatus,
-    switchDriveMode,
+    startCar,
+    stopCar
   } = useCarContext();
 
   const [size, setSize] = useState<SizeType>("large");
@@ -42,7 +41,6 @@ const Garage: React.FC = () => {
   const [carId, setCarId] = useState<number>(0);
   const [carName, setCarName] = useState<string>("");
   const navigate = useNavigate();
-  let animation = anime({});
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageElements, setCurrentPageElements] = useState<CarTypes[]>(
@@ -130,69 +128,6 @@ const Garage: React.FC = () => {
     }
   };
 
-  const onStartCar = async (
-    carId: number,
-    carStatus: string,
-    carRef: HTMLDivElement | null,
-    carWrapperRef: HTMLDivElement | null
-  ) => {
-    try {
-      const updatedCarData = await switchCarStatus({
-        id: carId,
-        status: carStatus,
-      });
-      const { velocity, distance } = updatedCarData;
-
-      const startingPosition = carRef?.getBoundingClientRect().left || 0;
-      const containerWidth = carWrapperRef?.getBoundingClientRect().right || 0;
-      const availableSpace = containerWidth - startingPosition;
-      const animationDuration = distance / velocity;
-      console.log(animationDuration);
-
-      const carIconWidth = carRef?.clientWidth || 0;
-      const maxDistance = availableSpace - carIconWidth;
-      animation = anime({
-        targets: carRef,
-        translateX: [0, maxDistance],
-        direction: "normal",
-        duration: animationDuration,
-        easing: "linear",
-        autoplay: false,
-        complete: () => {
-          anime.set(carRef, { translateX: maxDistance });
-        },
-      });
-
-      animation.play();
-
-      const isEngineBroken = await switchDriveMode({
-        id: carId,
-        status: "drive",
-      });
-
-      if (isEngineBroken) {
-        animation.pause();
-      }
-    } catch (error) {
-      console.error("Error starting car:", error);
-    }
-  };
-
-  const onStopCar = async (
-    carId: number,
-    carStatus: string,
-    carRef: HTMLDivElement | null,
-    carWrapperRef: HTMLDivElement | null
-  ) => {
-    try {
-      await switchCarStatus({ id: carId, status: carStatus });
-      animation.restart();
-      animation.pause();
-    } catch (error) {
-      console.error("Error stopping car:", error);
-    }
-  };
-
   const generateCars = async () => {
     try {
       const generatedCars = await Promise.all(
@@ -211,9 +146,21 @@ const Garage: React.FC = () => {
     }
   };
 
+  const startRace = () => {
+    currentPageElements.forEach((car) => {
+      startCar(car.id, "started");
+    });
+  };
+
+  const stopRace = () => {
+    currentPageElements.forEach((car) => {
+    stopCar(car.id, "stopped");
+    });
+  };
+
   return (
     <div className='garage'>
-      <div className='garage__header'>
+      <div className='header'>
         <Flex gap='middle'>
           <Button
             type='primary'
@@ -240,12 +187,14 @@ const Garage: React.FC = () => {
               text='RACE'
               icon='play'
               btnType='primary'
+              onStartRace={startRace}
             />
             <CustomButton
               color='#6921C2'
               text='RESET'
               icon='reset'
               btnType='primary'
+              onStopRace={stopRace}
             />
           </Space>
 
@@ -326,8 +275,7 @@ const Garage: React.FC = () => {
               {...car}
               onDelete={() => onDeleteCar(car.id)}
               onUpdate={() => setCarId(car.id)}
-              onStart={onStartCar}
-              onStop={onStopCar}
+              
             />
           ))}
           <Pagination

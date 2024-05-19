@@ -3,7 +3,7 @@
   height: 100vh;
 }
 
-.garage__header {
+.header {
   max-width: 900px;
   margin-inline: auto;
   display: flex;
@@ -13,7 +13,7 @@
   font-size: calc(10px + 2vmin);
 }
 
-.garage__header h2 {
+.header h2 {
   color: transparent;
   background: linear-gradient(135deg, #42d392, #647eff);
   -webkit-background-clip: text;
@@ -41,6 +41,7 @@
   width: 100vw;
   height: 100vh;
 }
+
 
 .car__component {
   position: relative;

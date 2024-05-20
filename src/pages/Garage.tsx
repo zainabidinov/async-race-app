@@ -32,7 +32,7 @@ const Garage: React.FC = () => {
     deleteCar,
     updateCar,
     startCar,
-    stopCar
+    stopCar,
   } = useCarContext();
 
   const [size, setSize] = useState<SizeType>("large");
@@ -154,7 +154,7 @@ const Garage: React.FC = () => {
 
   const stopRace = () => {
     currentPageElements.forEach((car) => {
-    stopCar(car.id, "stopped");
+      stopCar(car.id, "stopped");
     });
   };
 
@@ -275,7 +275,6 @@ const Garage: React.FC = () => {
               {...car}
               onDelete={() => onDeleteCar(car.id)}
               onUpdate={() => setCarId(car.id)}
-              
             />
           ))}
           <Pagination

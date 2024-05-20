@@ -17,9 +17,6 @@ import anime from "animejs";
 import { getWinner } from "../api/getWinner";
 import { updateWinner } from "../api/updateWinner";
 
-type Color = string;
-type Format = string | undefined;
-
 type CarContextType = {
   cars: CarTypes[];
   winners: WinnerData[];

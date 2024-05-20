@@ -1,5 +1,4 @@
 import BASE_URL from "./baseURL";
-import { CarTypes } from "../types/types";
 
 export const switchDriveMode = async (carData: { id: number, status: string }): Promise<boolean> => {
     try {

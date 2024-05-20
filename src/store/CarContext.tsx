@@ -13,7 +13,7 @@ import { updateCar } from "../api/updateCar";
 import { switchCarStatus } from "../api/switchCarStatus";
 import { switchDriveMode } from "../api/switchDriveMode";
 import { createWinner } from "../api/createWinner";
-import anime from "animejs";
+import anime from "animejs"
 import { getWinner } from "../api/getWinner";
 import { updateWinner } from "../api/updateWinner";
 

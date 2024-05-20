@@ -1,46 +1,69 @@
-# Getting Started with Create React App
+# Async Race
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Deployed Link: [Async Race App Deployment](https://async-race-app-mz.vercel.app/)
 
-## Available Scripts
+# Calculated Total Score - 320
 
-In the project directory, you can run:
+## Checklist
 
-### `npm start`
+- [x] Deployment Platform: Successfully deploy the UI on one of the following platforms: GitHub Pages, Netlify, Vercel, Cloudflare Pages, or a similar service.
+- [x] Commit guidelines compliance: Ensure that all commits follow the specified commit guidelines, thereby promoting a clear and consistent commit history. This includes using meaningful commit messages that accurately describe the changes made.
+- [x] Checklist included in README.md: Include the project's checklist in the README.md file. Mark all implemented features to provide a clear overview of the project's completion status.
+- [x] Score calculation: Use this checklist to calculate your score. Check all implemented features, then calculate your score and put it at the top of the README.md.
+- [x] UI Deployment link in README.md: Place the link to the deployed UI at the top of the README.md file, alongside the calculated score.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Basic Structure (85 points)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+#### 1. View Configuration (30 points)
+- [x] Two Views (10 points)
+- [x] Garage View Content (5 points)
+- [x] Winners View Content (5 points)
+- [ ] Persistent State (10 points)
 
-### `npm test`
+#### 2. Garage View Functionality (55 points)
+- [x] CRUD Operations (20 points)
+- [x] Color Selection (10 points)
+- [x] Management Buttons (5 points)
+- [x] Pagination (10 points)
+- [x] Random Car Creation (10 points)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Car Animation (50 points)
+- [x] Engine Control Buttons (10 points)
+- [x] Start Engine Animation (20 points)
+- [x] Stop Engine Animation (10 points)
+- [ ] Button States (5 points)
+- [ ] Responsive Animation (5 points)
 
-### `npm run build`
+### Race Animation (35 points)
+- [x] Start Race Button (15 points)
+- [x] Reset Race Button (10 points)
+- [x] Winner Announcement (10 points)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Winners View (45 points)
+- [x] Display Winners (15 points)
+- [x] Pagination for Winners (10 points)
+- [x] Winners Table (10 points)
+- [ ] Sorting Functionality (10 points)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Application Architecture (40 points)
+- [x] Modular Design (40 points)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Dynamic Content Generation (30 points)
+- [x] JavaScript-Generated HTML Content (30 points)
 
-### `npm run eject`
+### Single Page Application (25 points)
+- [x] SPA Implementation (25 points)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Bundling and Tooling (20 points)
+- [ ] Use of Webpack or Similar (20 points)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Code Quality and Standards (15 points)
+- [x] Eslint with Airbnb Style Guide (15 points)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### Code Organization and Efficiency (15 points)
+- [x] Function Modularization (10 points)
+- [x] Code Duplication and Magic Numbers (5 points)
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Prettier and ESLint Configuration (10 points)
+- [x] Prettier Setup (5 points)
+- [x] ESLint Configuration (5 points)

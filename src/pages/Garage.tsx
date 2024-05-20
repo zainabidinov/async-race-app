@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo } from "react";
 import "../styles/styles.css";
 import {
   ConfigProviderProps,
@@ -15,7 +15,6 @@ import Car from "../components/Car";
 import type { ColorPickerProps, GetProp } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useCarContext } from "../store/CarContext";
-import anime from "animejs";
 import { genRandomColor, genRandomCar } from "../utils/genRandomCars";
 import { CarTypes } from "../types/types";
 

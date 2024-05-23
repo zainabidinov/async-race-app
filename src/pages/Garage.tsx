@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useState, useMemo } from 'react';
 import '../styles/styles.css';
 import {
@@ -43,7 +44,7 @@ const Garage: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageElements, setCurrentPageElements] = useState<CarTypes[]>(
-    []
+    [],
   );
   const [totalElementsCount, setTotalElementsCount] = useState(0);
 
@@ -86,7 +87,7 @@ const Garage: React.FC = () => {
 
   const hexString = useMemo<string>(
     () => (typeof color === 'string' ? color : color?.toHexString()),
-    [color]
+    [color],
   );
 
   const onUpdateCar = async (values: {
@@ -109,8 +110,6 @@ const Garage: React.FC = () => {
         });
         setCarId(0);
         setCars(cars.map((car) => (car.id === carId ? updatedCar : car)));
-        setCurrentPageElements(cars);
-        setTotalElementsCount(cars.length);
       } catch (error) {
         console.error('Error updating car:', error);
       }
@@ -137,7 +136,7 @@ const Garage: React.FC = () => {
             color: genRandomColor(),
           });
           return newCar;
-        })
+        }),
       );
       setCars([...cars, ...generatedCars]);
     } catch (error) {
@@ -157,19 +156,25 @@ const Garage: React.FC = () => {
     });
   };
 
+  useEffect(() => {
+    const newOffset = (currentPage - 1) * 7;
+    const currentPageCars = cars.slice(newOffset, newOffset + 7);
+    setCurrentPageElements(currentPageCars);
+  }, [cars, currentPage]);
+
   return (
-    <div className="garage">
-      <div className="header">
-        <Flex gap="middle">
+    <div className='garage'>
+      <div className='header'>
+        <Flex gap='middle'>
           <Button
-            type="primary"
+            type='primary'
             size={size}
             onClick={() => navigate('/garage')}
           >
             GARAGE
           </Button>
           <Button
-            type="primary"
+            type='primary'
             size={size}
             onClick={() => navigate('/winners')}
           >
@@ -178,36 +183,36 @@ const Garage: React.FC = () => {
         </Flex>
         <h2>ASYNC RACE</h2>
       </div>
-      <div className="container">
-        <div className="garage__body-header">
+      <div className='container'>
+        <div className='garage__body-header'>
           <Space>
             <CustomButton
-              color="#42d392"
-              text="RACE"
-              icon="play"
-              btnType="primary"
+              color='#42d392'
+              text='RACE'
+              icon='play'
+              btnType='primary'
               onStartRace={startRace}
             />
             <CustomButton
-              color="#6921C2"
-              text="RESET"
-              icon="reset"
-              btnType="primary"
+              color='#6921C2'
+              text='RESET'
+              icon='reset'
+              btnType='primary'
               onStopRace={stopRace}
             />
           </Space>
 
           <Space>
-            <Form onFinish={onCreateCar} layout="inline">
-              <Form.Item name="name">
+            <Form onFinish={onCreateCar} layout='inline'>
+              <Form.Item name='name'>
                 <Input
-                  placeholder="TYPE CAR BRAND"
-                  variant="filled"
+                  placeholder='TYPE CAR BRAND'
+                  variant='filled'
                   value={carName}
                   onChange={(e) => setCarName(e.target.value)}
                 />
               </Form.Item>
-              <Form.Item name="color">
+              <Form.Item name='color'>
                 <ColorPicker
                   defaultValue={color}
                   format={formatHex}
@@ -221,26 +226,26 @@ const Garage: React.FC = () => {
               </Form.Item>
               <Space>
                 <CustomButton
-                  color="#6921C2"
-                  text="CREATE"
-                  btnType="primary"
-                  btnSubmitType="submit"
+                  color='#6921C2'
+                  text='CREATE'
+                  btnType='primary'
+                  btnSubmitType='submit'
                 />
               </Space>
             </Form>
           </Space>
 
           <Space>
-            <Form onFinish={onUpdateCar} layout="inline">
-              <Form.Item name="name">
+            <Form onFinish={onUpdateCar} layout='inline'>
+              <Form.Item name='name'>
                 <Input
-                  placeholder="TYPE CAR BRAND"
-                  variant="filled"
+                  placeholder='TYPE CAR BRAND'
+                  variant='filled'
                   value={carName}
                   onChange={(e) => setCarName(e.target.value)}
                 />
               </Form.Item>
-              <Form.Item name="color">
+              <Form.Item name='color'>
                 <ColorPicker
                   defaultValue={color}
                   format={formatHex}
@@ -254,10 +259,10 @@ const Garage: React.FC = () => {
               </Form.Item>
               <Space>
                 <CustomButton
-                  color="#6921C2"
-                  text="UPDATE"
-                  btnType="primary"
-                  btnSubmitType="submit"
+                  color='#6921C2'
+                  text='UPDATE'
+                  btnType='primary'
+                  btnSubmitType='submit'
                 />
               </Space>
             </Form>
@@ -265,14 +270,14 @@ const Garage: React.FC = () => {
 
           <Space>
             <CustomButton
-              color="#42d392"
-              text="GENERATE CARS"
-              btnType="primary"
+              color='#42d392'
+              text='GENERATE CARS'
+              btnType='primary'
               onGenerateCars={generateCars}
             />
           </Space>
         </div>
-        <div className="garage__body">
+        <div className='garage__body'>
           <hr />
           {currentPageElements.map((car) => (
             <Car

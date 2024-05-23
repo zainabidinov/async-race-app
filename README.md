@@ -2,7 +2,7 @@
 
 Deployed Link: [Async Race App Deployment](https://async-race-app-mz.vercel.app/)
 
-# Calculated Total Score - 320
+# Calculated Total Score - 340
 
 ## Checklist
 
@@ -55,7 +55,7 @@ Deployed Link: [Async Race App Deployment](https://async-race-app-mz.vercel.app/
 - [x] SPA Implementation (25 points)
 
 ### Bundling and Tooling (20 points)
-- [ ] Use of Webpack or Similar (20 points)
+- [x] Use of Webpack or Similar (20 points)
 
 ### Code Quality and Standards (15 points)
 - [x] Eslint with Airbnb Style Guide (15 points)

@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button, ConfigProvider } from "antd";
 import { PlayCircleTwoTone, UndoOutlined } from "@ant-design/icons";
 import { ButtonTypes } from "../types/types";

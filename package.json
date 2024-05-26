@@ -24,7 +24,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack serve --config tools/webpack/webpack.config.dev.js",
     "build": "cross-env NODE_ENV=production webpack --config tools/webpack/webpack.config.prod.js",
-    "serve": "cross-env NODE_ENV=production webpack --config tools/webpack/webpack.config.prod.js && cross-env serve dist/",
+    "serve": "cross-env NODE_ENV=production webpack --config tools/webpack/webpack.config.prod.js && cross-env serve -s build/",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx src/",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

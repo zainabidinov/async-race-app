@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   mode: 'development',
   entry: ['./src/index.tsx'],
@@ -5,6 +7,7 @@ module.exports = {
     rules: require('./webpack.rules'),
   },
   output: {
+    path: path.resolve(__dirname, '../../build'),
     filename: '[name].js',
     chunkFilename: '[name].chunk.js',
   },

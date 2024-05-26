@@ -2,7 +2,7 @@
 
 Deployed Link: [Async Race App Deployment](https://async-race-app-mz.vercel.app/)
 
-# Calculated Total Score - 340
+# Calculated Total Score - 355
 
 ## Checklist
 
@@ -32,7 +32,7 @@ Deployed Link: [Async Race App Deployment](https://async-race-app-mz.vercel.app/
 - [x] Start Engine Animation (20 points)
 - [x] Stop Engine Animation (10 points)
 - [ ] Button States (5 points)
-- [ ] Responsive Animation (5 points)
+- [x] Responsive Animation (5 points)
 
 ### Race Animation (35 points)
 - [x] Start Race Button (15 points)
@@ -43,7 +43,7 @@ Deployed Link: [Async Race App Deployment](https://async-race-app-mz.vercel.app/
 - [x] Display Winners (15 points)
 - [x] Pagination for Winners (10 points)
 - [x] Winners Table (10 points)
-- [ ] Sorting Functionality (10 points)
+- [x] Sorting Functionality (10 points)
 
 ### Application Architecture (40 points)
 - [x] Modular Design (40 points)

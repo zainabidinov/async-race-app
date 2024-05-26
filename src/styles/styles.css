@@ -53,3 +53,29 @@
 .car-icon {
   display: block;
 }
+
+@media (max-width: 1300px) {
+  .container {
+    margin-inline: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .garage__body-header {
+    flex-direction: column-reverse;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 501px) {
+  .header {
+    flex-direction: column-reverse;
+    margin-top: 1rem;
+  }
+
+  .car-icon {
+    size: 5rem;
+  }
+}

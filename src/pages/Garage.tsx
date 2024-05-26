@@ -35,18 +35,18 @@ const Garage: React.FC = () => {
     stopCar,
   } = useCarContext();
 
-  const [size, setSize] = useState<SizeType>('large');
   const [color, setColor] = useState<Color>('#42d392');
   const [formatHex, setFormatHex] = useState<Format | undefined>('hex');
   const [carId, setCarId] = useState<number>(0);
   const [carName, setCarName] = useState<string>('');
   const navigate = useNavigate();
-
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [currentPageElements, setCurrentPageElements] = useState<CarTypes[]>(
     [],
   );
   const [totalElementsCount, setTotalElementsCount] = useState(0);
+  const [size, setSize] = useState<SizeType>('middle');
+  const [carSize, setCarSize] = useState<string>("6em");
 
   const handlePageClick = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -162,6 +162,18 @@ const Garage: React.FC = () => {
     setCurrentPageElements(currentPageCars);
   }, [cars, currentPage]);
 
+  useEffect(() => {
+    const updateSize = () => {
+      setSize(window.innerWidth <= 501 ? 'small' : 'middle');
+      setCarSize(window.innerWidth <= 501? "2.8em" : "6em");
+    };
+
+    updateSize();
+
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   return (
     <div className='garage'>
       <div className='header'>
@@ -210,6 +222,7 @@ const Garage: React.FC = () => {
                   variant='filled'
                   value={carName}
                   onChange={(e) => setCarName(e.target.value)}
+                  size={size}
                 />
               </Form.Item>
               <Form.Item name='color'>
@@ -222,6 +235,7 @@ const Garage: React.FC = () => {
                   getPopupContainer={undefined}
                   autoAdjustOverflow={undefined}
                   destroyTooltipOnHide={undefined}
+                  size={size}
                 />
               </Form.Item>
               <Space>
@@ -243,6 +257,7 @@ const Garage: React.FC = () => {
                   variant='filled'
                   value={carName}
                   onChange={(e) => setCarName(e.target.value)}
+                  size={size}
                 />
               </Form.Item>
               <Form.Item name='color'>
@@ -255,6 +270,7 @@ const Garage: React.FC = () => {
                   getPopupContainer={undefined}
                   autoAdjustOverflow={undefined}
                   destroyTooltipOnHide={undefined}
+                  size={size}
                 />
               </Form.Item>
               <Space>
@@ -285,6 +301,8 @@ const Garage: React.FC = () => {
               {...car}
               onDelete={() => onDeleteCar(car.id)}
               onUpdate={() => setCarId(car.id)}
+              buttonSize={size}
+              carSize={carSize}
             />
           ))}
           <Pagination

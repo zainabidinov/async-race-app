@@ -1,7 +1,9 @@
-import React from 'react';
-import { Button, ConfigProvider } from "antd";
-import { PlayCircleTwoTone, UndoOutlined } from "@ant-design/icons";
-import { ButtonTypes } from "../types/types";
+import React, { useEffect, useState } from 'react';
+import { Button, ConfigProvider, ConfigProviderProps } from 'antd';
+import { PlayCircleTwoTone, UndoOutlined } from '@ant-design/icons';
+import { ButtonTypes } from '../types/types';
+
+type SizeType = ConfigProviderProps['componentSize'];
 
 interface customButtonTypes extends ButtonTypes {
   onDelete?: () => void;
@@ -31,11 +33,24 @@ const CustomButton: React.FC<customButtonTypes> = ({
 }) => {
   let buttonIcon;
 
+  const [buttonSize, setButtonSize] = useState<SizeType>('middle');
+
+  useEffect(() => {
+    const updateButtonSize = () => {
+      setButtonSize(window.innerWidth <= 501 ? 'small' : 'middle');
+    };
+
+    updateButtonSize();
+
+    window.addEventListener('resize', updateButtonSize);
+    return () => window.removeEventListener('resize', updateButtonSize);
+  }, []);
+
   switch (icon) {
-    case "play":
+    case 'play':
       buttonIcon = <PlayCircleTwoTone twoToneColor={color} />;
       break;
-    case "reset":
+    case 'reset':
       buttonIcon = <UndoOutlined />;
       break;
     default:
@@ -75,13 +90,14 @@ const CustomButton: React.FC<customButtonTypes> = ({
         }}
       >
         <Button
-          type={btnType ? "primary" : "default"}
+          type={btnType ? 'primary' : 'default'}
           icon={buttonIcon}
-          iconPosition='end'
+          iconPosition="end"
           block
-          htmlType={btnSubmitType ? "submit" : "button"}
+          htmlType={btnSubmitType ? 'submit' : 'button'}
           onClick={handleClick}
           disabled={isDisabled}
+          size={buttonSize}
         >
           {text}
         </Button>
